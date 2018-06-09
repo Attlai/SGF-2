@@ -9,6 +9,7 @@ struct Fichier
     LISTE_Fichier *contenu;
     Fichier * parent;
     CHEMIN *path;
+
     //char id_User;
     //char* id_Etranger[];
     char *nom_fichier;

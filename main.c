@@ -13,6 +13,7 @@ bool test_creer_INODE_full();
 bool test_creer_INODE_11place();
 bool test_remove_INODE();
 bool test_creer_dossier();
+bool test_remove_folder();
 
 
 
@@ -37,6 +38,7 @@ bool test_creer_dossier();
 
 int main()
 {
+
     //TEST(test_initialisation_INODE)
     TEST(test_initialisation_DISK)
     TEST(test_creer_INODE_normal)
@@ -44,6 +46,7 @@ int main()
     TEST(test_creer_INODE_full)
     TEST(test_remove_INODE)
     TEST(test_creer_dossier)
+    TEST(test_remove_folder)
 
 
     return 0;
@@ -199,6 +202,39 @@ bool test_creer_dossier()
 
     TESTU1(strcmp(entree_dossier.nom,"dossier 1") != 0,
         "ERR CREA DOSSIER : WRONG CHILD NAME (%s)",entree_dossier.nom)
+
+    TESTU1(p1.superbloc[inode_id]->repertoire.id_parent != ROOT_INODE_ID,
+        "ERR CREA DOSSIER : WRONG PARENT ID (%d)",entree_dossier.id_inode)
+
+
+    END_TEST
+}
+
+bool test_remove_folder()
+{
+    INIT_TEST
+
+    DISK p1;
+    Initialiser_DISK(&p1);
+    int inode_id;
+
+    inode_id = remove_folder(&p1,42,NORMAL);
+
+    TESTU0(inode_id != ERR_UNUSUED_INODE,
+          "ERR RM DOSSSIER : FOLDER DOES NOT EXIST")
+
+    inode_id = create_folder(&p1,"root",ROOT_PARENT_ID);
+    inode_id = create_folder(&p1,"dossier 1",ROOT_INODE_ID);
+
+    int err_nb = remove_folder(&p1,ROOT_INODE_ID,NORMAL);
+
+    TESTU0(err_nb != ERR_DIRECTORY_NOT_EMPTY,
+        "ERR RM DOSSIER : DELETED NOT EMPTY FOLDER")
+
+    remove_folder(&p1,inode_id,NORMAL);
+
+    TESTU0(p1.superbloc[ROOT_INODE_ID]->repertoire.nb_fichiers != 0,
+        "ERR RM DOSSIER : ROOT STILL HAS CHILD")
 
     END_TEST
 }

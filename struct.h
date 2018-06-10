@@ -1,5 +1,4 @@
 #include <time.h>
-
 #define NB_MAX_BLOCS 16
 #define TAILLE_MAX_BLOC 1024
 #define TAILLE_MAX_FILE (NB_MAX_BLOCS * TAILLE_MAX_BLOC)
@@ -15,7 +14,9 @@ typedef enum {
     FICHIER,DOSSIER
 }type_inode;
 
-
+typedef enum{
+    NORMAL,RECURSIF
+}mode_suppression;
 
 typedef struct
 {
@@ -38,6 +39,7 @@ typedef struct
 typedef struct
 {
     int nb_fichiers;
+    int id_parent;
     ENTREE_REPERTOIRE fichiers_contenus[CONTENU_MAX_REPERTOIRES];
 }BLOC_REPERTOIRE;
 

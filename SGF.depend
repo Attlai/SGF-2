@@ -5,10 +5,10 @@
 	<stdbool.h>
 	<stdio.h>
 
-1528643285 c:\users\maelr_000\desktop\bidouillage info\sgf\struct.h
+1528653743 c:\users\maelr_000\desktop\bidouillage info\sgf\struct.h
 	<time.h>
 
-1528650943 source:c:\users\maelr_000\desktop\bidouillage info\sgf\main.c
+1528655822 source:c:\users\maelr_000\desktop\bidouillage info\sgf\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -19,7 +19,7 @@
 1528643497 c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_liste.h
 	<stdbool.h>
 
-1528649524 source:c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_node.c
+1528655051 source:c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_node.c
 	"struct.h"
 	"fonctions_node.h"
 	<stdlib.h>
@@ -27,5 +27,5 @@
 	<stdio.h>
 	<string.h>
 
-1528650969 c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_node.h
+1528655892 c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_node.h
 

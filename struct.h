@@ -1,3 +1,5 @@
+#include <time.h>
+
 #define NB_MAX_BLOCS 16
 #define TAILLE_MAX_BLOC 1024
 #define TAILLE_MAX_FILE (NB_MAX_BLOCS * TAILLE_MAX_BLOC)
@@ -11,7 +13,7 @@ typedef struct CHEMIN CHEMIN;
 
 typedef enum {
     FICHIER,DOSSIER
-}type_fichier;
+}type_inode;
 
 
 
@@ -24,7 +26,7 @@ typedef struct
 typedef struct
 {
     int taille_fichier;
-    char date_creation[10+1];
+    clock_t date;
 }META;
 
 typedef struct
@@ -43,7 +45,7 @@ typedef struct
 {
     int id;
     char* nom;
-    type_fichier type;
+    type_inode type;
     BLOC blocs[NB_MAX_BLOCS];
     BLOC_REPERTOIRE repertoire;
     META metadata;

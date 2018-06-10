@@ -1,13 +1,14 @@
 # depslib dependency file v1.0
-1528591330 source:c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_liste.c
+1528643495 source:c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_liste.c
 	"struct.h"
 	<stdlib.h>
 	<stdbool.h>
 	<stdio.h>
 
-1528631606 c:\users\maelr_000\desktop\bidouillage info\sgf\struct.h
+1528643285 c:\users\maelr_000\desktop\bidouillage info\sgf\struct.h
+	<time.h>
 
-1528635850 source:c:\users\maelr_000\desktop\bidouillage info\sgf\main.c
+1528645333 source:c:\users\maelr_000\desktop\bidouillage info\sgf\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -15,10 +16,10 @@
 	"fonctions_liste.h"
 	"fonctions_node.h"
 
-1528590078 c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_liste.h
+1528643497 c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_liste.h
 	<stdbool.h>
 
-1528631822 source:c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_node.c
+1528645416 source:c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_node.c
 	"struct.h"
 	"fonctions_node.h"
 	<stdlib.h>
@@ -26,5 +27,5 @@
 	<stdio.h>
 	<string.h>
 
-1528632623 c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_node.h
+1528645057 c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_node.h
 

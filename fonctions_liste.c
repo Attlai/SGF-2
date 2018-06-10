@@ -6,7 +6,7 @@
 
 
 
-void Afficher_chemin_proc(CHEMIN *path)
+/*void Afficher_chemin_proc(CHEMIN *path)
 {
     if(path == NULL)
     {
@@ -188,7 +188,7 @@ Fichier* Chercher_Fichier(Fichier* root,CHEMIN *destination)
     }
 }
 
-Fichier* Creer_Fichier(Fichier * parent,int* id,char * name,type_fichier t)
+Fichier* Creer_Fichier(Fichier * parent,int* id,char * name,type_inode t)
 {
     Fichier *f = (Fichier*) malloc(sizeof(Fichier));
     f->Id = (*id)++;
@@ -228,4 +228,4 @@ void Afficher_Arbre(Fichier* racine)
         Afficher_Arbre(contenu->f);
         contenu = contenu->suiv;
     }
-}
+}*/

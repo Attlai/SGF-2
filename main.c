@@ -8,46 +8,62 @@
 
 bool test_initialisation_INODE();
 bool test_initialisation_DISK();
+bool test_creer_INODE_normal();
+bool test_creer_INODE_full();
+bool test_creer_INODE_11place();
+
+
 
 #define TEST(test_fonc)  printf(test_fonc()? " + %s : OK\n" : " !! %s : KO\n",  #test_fonc );
-#define TESTU(test,message,code)\
+#define INIT_TEST    bool test_ok = true;
+#define END_TEST     return test_ok;
+
+#define TESTU1(test,message,code)\
               if(test)\
                 {\
                 printf(message, code); \
                 test_ok = false;\
                 }
 
+#define TESTU0(test,message)\
+              if(test)\
+                {\
+                printf(message); \
+                test_ok = false;\
+                }
+
 
 int main()
 {
-    TEST(test_initialisation_INODE)
-    TEST(test_initialisation_DISK);
-
-
+    //TEST(test_initialisation_INODE)
+    TEST(test_initialisation_DISK)
+    TEST(test_creer_INODE_normal)
+    TEST(test_creer_INODE_11place)
+    TEST(test_creer_INODE_full)
 
     return 0;
 }
 
 bool test_initialisation_DISK()
 {
-    DISK p1;
-    bool test_ok = true;
+    INIT_TEST
 
+    DISK p1;
     Initialiser_DISK(&p1);
 
-    TESTU(p1.last_id != 1,
+    TESTU1(p1.last_id != 1,
           "ERR INIT DISK : LAST_ID != 1 (%d)\n", p1.last_id)
 
     for(int i=0;i<TAILLE_MAX_DISK;i++)
     {
-        TESTU(p1.superbloc[i]!=NULL,
+        TESTU1(p1.superbloc[i]!=NULL,
             "ERR INIT DISK : SUPERBLOCK NOT NULL (BLOCK %d)\n",i)
     }
-    return test_ok;
 
+    END_TEST
 }
 
-bool test_initialisation_INODE()
+/*bool test_initialisation_INODE()
 {
     bool test_ok = true;
     INODE i;
@@ -66,6 +82,67 @@ bool test_initialisation_INODE()
         "ERR INIT INODE : CREATION DATE INITIALIZATION WRONG (%s)\n",i.metadata.date_creation)
 
     return test_ok;
+}*/
+
+bool test_creer_INODE_normal()
+{
+    INIT_TEST
+
+    DISK p1;
+    Initialiser_DISK(&p1);
+
+    int inode_id = Creer_INODE(&p1,"root",FICHIER);
+
+    TESTU0(inode_id == ERRNO_NO_FREE_INODE,
+        "ERR CREA INODE : NO FREE SPACE ON DISK")
+
+    TESTU1(p1.superbloc[inode_id] == NULL,
+        "ERR CREA INODE : BLOCK STILL EMPTY (%d)",inode_id)
+
+    END_TEST
 }
 
+bool test_creer_INODE_11place()
+{
+    INIT_TEST
 
+    DISK p1;
+    Initialiser_DISK(&p1);
+
+    for(int i = 1;i<11;i++)
+    {
+        p1.superbloc[i] = (INODE*)1;
+    }
+
+    int inode_id = Creer_INODE(&p1,"root",FICHIER);
+
+    TESTU0(inode_id == ERRNO_NO_FREE_INODE,
+        "ERR CREA INODE : NO FREE SPACE ON DISK")
+
+    TESTU1(inode_id != 11,
+        "ERR CREA INODE : WRONG PLACE (%d)",inode_id)
+
+    TESTU1(p1.superbloc[inode_id] == NULL,
+        "ERR CREA INODE : BLOCK STILL EMPTY (%d)",inode_id)
+
+    END_TEST
+}
+
+bool test_creer_INODE_full()
+{
+    INIT_TEST
+
+    DISK p1;
+    Initialiser_DISK(&p1);
+    for(int i=0;i<TAILLE_MAX_DISK;i++)
+    {
+        p1.superbloc[i] = (INODE*)1;
+    }
+
+    int inode_id = Creer_INODE(&p1,"root",FICHIER);
+
+    TESTU0(inode_id != ERRNO_NO_FREE_INODE,
+        "ERR CREA INODE FULL: FREE SPACE ON DISK")
+
+    END_TEST
+}

@@ -20,8 +20,6 @@ bool test_remove_fichier();
 
 int main()
 {
-
-    //TEST(test_initialisation_INODE)
     TEST(test_initialisation_DISK)
     TEST(test_creer_INODE_normal)
     TEST(test_creer_INODE_11place)
@@ -53,8 +51,6 @@ bool test_initialisation_DISK()
 
     END_TEST
 }
-
-/*bool test_initialisation_INODE()
 {
     bool test_ok = true;
     INODE i;

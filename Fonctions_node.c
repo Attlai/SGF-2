@@ -8,22 +8,6 @@
 #include "macro.h"
 
 
-/*//Fonction d'unitialisation d'un META
-void Initialiser_META(META* metadata)
-{
-    metadata->taille_fichier = 0;
-    char string[11] = "00/00/0000";
-    strncpy(metadata->date_creation,string,11);
-}
-
-//Fonction d'initialisation de INODE, peu utile mais plus propre
-void Initialiser_INODE(INODE *node)
-{
-    node->id = -1;
-    node->nom = NULL;
-    Initialiser_META(&node->metadata);
-}*/
-
 //Fonction d'initialisation de DISK
 void Initialiser_DISK(DISK *partition)
 {

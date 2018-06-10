@@ -63,28 +63,7 @@ typedef struct
     int last_id;
 }DISK;
 
-struct LISTE_Fichier
-{
-    Fichier* f;
-    LISTE_Fichier *suiv;
-};
 
-struct Fichier
-{
-    int Id;
-    LISTE_Fichier *contenu;
-    Fichier * parent;
-    CHEMIN *path;
-    char *nom_fichier;
-    int type;
-
-};
-
-struct CHEMIN
-{
-    int Id;
-    CHEMIN *suiv;
-};
 
 
 

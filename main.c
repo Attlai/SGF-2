@@ -4,10 +4,18 @@
 #include "fonctions_liste.h"
 #include "fonctions_node.h"
 
+void test_creation_INODE();
+
 int main()
 {
-    int Last_Id = 1;
+    test_creation_INODE();
 
+    return 0;
+}
+
+
+void test_creation_INODE()
+{
     INODE i;
     Initialiser_INODE(&i);
     printf("%d\n",i.id);
@@ -18,10 +26,4 @@ int main()
     printf("%d\n",i.metadata.taille_fichier);
     printf("%s\n",i.metadata.date_creation);
     printf("\n");
-    for(int i=0;i<NB_MAX_BLOCS;i++)
-    {
-        //printf("%s\n",i.blocs[i].contenu);
-    }
-
-    return 0;
 }

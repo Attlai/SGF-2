@@ -2,6 +2,7 @@
 #define TAILLE_MAX_BLOC 1024
 #define TAILLE_MAX_FILE (NB_MAX_BLOCS * TAILLE_MAX_BLOC)
 #define CONTENU_MAX_REPERTOIRES 64
+#define TAILLE_MAX_DISK 1024
 
 
 typedef struct LISTE_Fichier LISTE_Fichier;
@@ -12,16 +13,7 @@ typedef enum {
     FICHIER,DOSSIER
 }type_fichier;
 
-struct Fichier
-{
-    int Id;
-    LISTE_Fichier *contenu;
-    Fichier * parent;
-    CHEMIN *path;
-    char *nom_fichier;
-    int type;
 
-};
 
 typedef struct
 {
@@ -37,7 +29,7 @@ typedef struct
 
 typedef struct
 {
-    char* nom_fichier;
+    char* nom;
     int id_inode;
 }ENTREE_REPERTOIRE;
 
@@ -57,10 +49,27 @@ typedef struct
     META metadata;
 }INODE;
 
+typedef struct
+{
+    INODE *superbloc[TAILLE_MAX_DISK];
+    int last_id;
+}DISK;
+
 struct LISTE_Fichier
 {
     Fichier* f;
     LISTE_Fichier *suiv;
+};
+
+struct Fichier
+{
+    int Id;
+    LISTE_Fichier *contenu;
+    Fichier * parent;
+    CHEMIN *path;
+    char *nom_fichier;
+    int type;
+
 };
 
 struct CHEMIN

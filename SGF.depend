@@ -5,9 +5,9 @@
 	<stdbool.h>
 	<stdio.h>
 
-1528630399 c:\users\maelr_000\desktop\bidouillage info\sgf\struct.h
+1528631606 c:\users\maelr_000\desktop\bidouillage info\sgf\struct.h
 
-1528630414 source:c:\users\maelr_000\desktop\bidouillage info\sgf\main.c
+1528631610 source:c:\users\maelr_000\desktop\bidouillage info\sgf\main.c
 	<stdio.h>
 	<stdlib.h>
 	"struct.h"
@@ -17,7 +17,7 @@
 1528590078 c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_liste.h
 	<stdbool.h>
 
-1528630410 source:c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_node.c
+1528631822 source:c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_node.c
 	"struct.h"
 	"fonctions_node.h"
 	<stdlib.h>

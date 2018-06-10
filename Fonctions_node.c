@@ -19,3 +19,13 @@ void Initialiser_INODE(INODE *node)
     node->nom = NULL;
     Initialiser_META(&node->metadata);
 }
+
+void Initialiser_DISK(DISK *partition)
+{
+    for(int i=0;i<TAILLE_MAX_DISK;i++)
+    {
+        partition->superbloc[i] = NULL;
+    }
+    partition->last_id = 1;
+}
+

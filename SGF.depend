@@ -1,18 +1,29 @@
 # depslib dependency file v1.0
-1528590072 source:c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_liste.c
+1528591330 source:c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_liste.c
 	"struct.h"
 	<stdlib.h>
 	<stdbool.h>
 	<stdio.h>
 
-1528586674 c:\users\maelr_000\desktop\bidouillage info\sgf\struct.h
+1528630399 c:\users\maelr_000\desktop\bidouillage info\sgf\struct.h
 
-1528590050 source:c:\users\maelr_000\desktop\bidouillage info\sgf\main.c
+1528630414 source:c:\users\maelr_000\desktop\bidouillage info\sgf\main.c
 	<stdio.h>
 	<stdlib.h>
 	"struct.h"
 	"fonctions_liste.h"
+	"fonctions_node.h"
 
 1528590078 c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_liste.h
 	<stdbool.h>
+
+1528630410 source:c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_node.c
+	"struct.h"
+	"fonctions_node.h"
+	<stdlib.h>
+	<stdbool.h>
+	<stdio.h>
+	<string.h>
+
+1528628943 c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_node.h
 

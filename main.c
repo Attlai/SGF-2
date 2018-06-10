@@ -1,17 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "struct.h"
 #include "fonctions_liste.h"
 #include "fonctions_node.h"
 
-void test_creation_INODE();
+
+bool test_initialisation_INODE();
 bool test_initialisation_DISK();
 
 
 int main()
 {
-    test_creation_INODE();
-    printf(test_initialisation_DISK()? " + test_initialisation_DISK : OK" : " !! test_initialisation_DISK : KO");
+    printf(test_initialisation_INODE()? " + test_initialisation_INODE : OK\n" : " !! test_initialisation_INODE : KO\n");
+    printf(test_initialisation_DISK()? " + test_initialisation_DISK : OK\n" : " !! test_initialisation_DISK : KO\n");
 
 
     return 0;
@@ -20,13 +22,13 @@ int main()
 bool test_initialisation_DISK()
 {
     DISK p1;
-    bool err_init = true;
+    bool test_ok = true;
 
     Initialiser_DISK(&p1);
     if(p1.last_id != 1)
     {
         printf("ERR INIT DISK : LAST_ID != 1 (%d)\n",p1.last_id);
-        err_init=false;
+        test_ok=false;
     }
 
     for(int i=0;i<TAILLE_MAX_DISK;i++)
@@ -34,24 +36,38 @@ bool test_initialisation_DISK()
         if(p1.superbloc[i]!=NULL)
         {
             printf("ERR INIT DISK : SUPERBLOCK NOT NULL (BLOCK %d)\n",i);
-            err_init = false;
+            test_ok = false;
             break;
         }
     }
-    return err_init;
+    return test_ok;
 
 }
 
-void test_creation_INODE()
+bool test_initialisation_INODE()
 {
+    bool test_ok = true;
     INODE i;
     Initialiser_INODE(&i);
-    printf("%d\n",i.id);
-    if(i.nom == NULL)
+    if(i.id != -1)
     {
-        printf("NOM NUL\n");
+        printf("ERR INIT INODE : ID INITIALIZATION WRONG (id = %d)\n",i.id);
+        test_ok = false;
     }
-    printf("%d\n",i.metadata.taille_fichier);
-    printf("%s\n",i.metadata.date_creation);
-    printf("\n");
+    if(i.nom != NULL)
+    {
+        printf("ERR INIT INODE : NAME NOT NULL (%s)\n",i.nom);
+        test_ok = false;
+    }
+    if(i.metadata.taille_fichier != 0)
+    {
+        printf("ERR INIT INODE : FILE SIZE NOT NULL (%d)\n",i.metadata.taille_fichier);
+        test_ok = false;
+    }
+    if(strcmp(i.metadata.date_creation, "00/00/0000") != 0)
+    {
+        printf("ERR INIT INODE : CREATION DATE INITIALIZATION WRONG (%s)\n",i.metadata.date_creation);
+        test_ok = false;
+    }
+    return test_ok;
 }

@@ -74,6 +74,7 @@ int Creer_INODE(DISK* partition,char *name,type_inode type)
     node->nom = name;
     node->metadata.taille_fichier = 0;
     node->metadata.date = clock();
+    node->type = type;
 
     return indice;
 }
@@ -83,4 +84,71 @@ int Remove_INODE(DISK* partition,int rm_id)
     INODE *rm_inode = partition->superbloc[rm_id];
     free(rm_inode);
     partition->superbloc[rm_id] = NULL;
+
+    return 0;
 }
+
+int create_folder(DISK *partition,char* nom,int id_parent)
+{
+    int inode_id;
+    // si id_parent est NUL => création racine
+    if(id_parent == ROOT_PARENT_ID)
+    {
+        if(partition->superbloc[ROOT_INODE_ID] != NULL)
+        {
+            return ERR_ROOT_ALRDY_CREATED;
+        }
+        else
+        {
+            DEBUG("CREATION RACINE")
+            inode_id = Creer_INODE(partition,nom,DOSSIER);
+            if(inode_id != ROOT_INODE_ID)
+            {
+                return ERR_ROOT_WRONG_ID;
+            }
+            return inode_id;
+        }
+    }
+    //Creation (ou pas) de repertoire non racine
+    else
+    {
+        //si parent n'est pas un dossier => pas de creation
+        if(partition->superbloc[id_parent]->type != DOSSIER)
+        {
+            return ERR_PARENT_NOT_FOLDER;
+        }
+        //non racine + parent dossier -> creation du dossier
+        else
+        {
+            DEBUG("CREATION FICHIER")
+            inode_id = Creer_INODE(partition,nom,DOSSIER);
+            //Si plus de place => remontée erreur
+            if(inode_id == ERRNO_NO_FREE_INODE)
+            {
+                return inode_id;
+            }
+            else
+            {
+
+                INODE *inode_parent = partition->superbloc[id_parent];
+                //Si dossier parent déjà plein
+                if(inode_parent->repertoire.nb_fichiers == CONTENU_MAX_REPERTOIRES)
+                {
+                    return ERR_PARENT_FULL;
+                }
+                else
+                {
+                    int index_fichier = inode_parent->repertoire.nb_fichiers++;
+                    inode_parent->repertoire.fichiers_contenus[index_fichier].id_inode = inode_id;
+                    inode_parent->repertoire.fichiers_contenus[index_fichier].nom = nom;
+
+                    return inode_id;
+                }
+
+            }
+
+        }
+    }
+}
+
+//int create_file(DISK *partition,char *nom,)

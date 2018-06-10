@@ -12,6 +12,7 @@ bool test_creer_INODE_normal();
 bool test_creer_INODE_full();
 bool test_creer_INODE_11place();
 bool test_remove_INODE();
+bool test_creer_dossier();
 
 
 
@@ -42,7 +43,7 @@ int main()
     TEST(test_creer_INODE_11place)
     TEST(test_creer_INODE_full)
     TEST(test_remove_INODE)
-
+    TEST(test_creer_dossier)
 
 
     return 0;
@@ -172,6 +173,32 @@ bool test_remove_INODE()
 
     TESTU1(inode_id != 50,
            "ERR RM INODE : WRONG SLOT (%d)",inode_id)
+
+    END_TEST
+}
+
+bool test_creer_dossier()
+{
+    INIT_TEST
+
+    DISK p1;
+    Initialiser_DISK(&p1);
+    int inode_id;
+
+
+    inode_id = create_folder(&p1,"root",ROOT_PARENT_ID);
+    TESTU1(inode_id != ROOT_INODE_ID,
+        "ERR CREA DOSSIER : ROOT CREATED WITH WRONG ID (%d)",inode_id)
+
+    //On fait un test pour vérifier qu'en ajoutant un dossier dans root, on le retrouve bien dans la liste des fichiers contenus de root (id, puis nom)
+    inode_id = create_folder(&p1,"dossier 1",ROOT_INODE_ID);
+    ENTREE_REPERTOIRE entree_dossier = p1.superbloc[ROOT_INODE_ID]->repertoire.fichiers_contenus[0];
+
+    TESTU1(entree_dossier.id_inode != inode_id,
+        "ERR CREA DOSSIER : WRONG CHILD ID (%d)",entree_dossier.id_inode)
+
+    TESTU1(strcmp(entree_dossier.nom,"dossier 1") != 0,
+        "ERR CREA DOSSIER : WRONG CHILD NAME (%s)",entree_dossier.nom)
 
     END_TEST
 }

@@ -55,7 +55,7 @@ int Trouver_place_DISK(DISK *partition)
         }
     }
 
-    return ERRNO_NO_FREE_INODE;
+    return ERR_NO_FREE_INODE;
 }
 
 //Fonction qui ajouter un inode à un DISK, en renseignant le type de fichier, et renvoie l'indice (potentiellement erreur)
@@ -63,7 +63,7 @@ int Creer_INODE(DISK* partition,char *name,type_inode type)
 {
     INODE * node = NULL;
     int indice = Trouver_place_DISK(partition);
-    if(indice != ERRNO_NO_FREE_INODE)
+    if(indice != ERR_NO_FREE_INODE)
     {
         node = NEW(INODE)
         partition->superbloc[indice] = node;
@@ -75,13 +75,13 @@ int Creer_INODE(DISK* partition,char *name,type_inode type)
     }
     if(type==DOSSIER)
     {
-        node->repertoire.id_parent = -1;
         for(int i=0;i<CONTENU_MAX_REPERTOIRES;i++)
         {
             node->repertoire.fichiers_contenus[i].id_inode = -1;
             node->repertoire.fichiers_contenus[i].nom = NULL;
         }
     }
+    node->id_parent = -1;
     node->nom = name;
     node->metadata.taille_fichier = 0;
     node->metadata.date = clock();
@@ -118,6 +118,23 @@ int seek_free_slot_folder(INODE* dossier_parent)
     return ERR_DIRECTORY_FULL;
 }
 
+bool check_inode_name_is_unique(INODE *parent,char *name)
+{
+    for(int i = 0;i<CONTENU_MAX_REPERTOIRES;i++)
+    {
+        if(parent->repertoire.fichiers_contenus[i].id_inode != -1)
+        {
+            if(strcmp(parent->repertoire.fichiers_contenus[i].nom,name)==0)
+            {
+                DEBUG("NAME ALREADY EXISTS")
+                return false;
+            }
+        }
+
+    }
+    return true;
+}
+
 int seek_folder_slot_from_inode(INODE* dossier,int id_fichier)
 {
     for(int i=0;i<CONTENU_MAX_REPERTOIRES;i++)
@@ -150,7 +167,7 @@ int create_folder(DISK *partition,char* nom,int id_parent)
                 return ERR_ROOT_WRONG_ID;
             }
             //le parent de root est considéré comme étant lui-même
-            partition->superbloc[ROOT_INODE_ID]->repertoire.id_parent = ROOT_INODE_ID;
+            partition->superbloc[ROOT_INODE_ID]->id_parent = ROOT_INODE_ID;
             return inode_id;
         }
     }
@@ -165,10 +182,14 @@ int create_folder(DISK *partition,char* nom,int id_parent)
         //non racine + parent dossier -> creation du dossier
         else
         {
-            DEBUG("CREATION FICHIER")
+            if(!check_inode_name_is_unique(partition->superbloc[id_parent],nom))
+            {
+                return ERR_NAME_ALREADY_USED_IN_FOLDER;
+            }
+            DEBUG("CREATION DOSSIER")
             inode_id = Creer_INODE(partition,nom,DOSSIER);
             //Si plus de place => remontée erreur
-            if(inode_id == ERRNO_NO_FREE_INODE)
+            if(inode_id == ERR_NO_FREE_INODE)
             {
                 return inode_id;
             }
@@ -176,16 +197,17 @@ int create_folder(DISK *partition,char* nom,int id_parent)
             {
 
                 INODE *inode_parent = partition->superbloc[id_parent];
-                //On cherche si on peut rajouter un fichier au répertoire
+                //On cherche si on peut rajouter un dossier au répertoire
                 int slot = seek_free_slot_folder(inode_parent);
                 DEBUG1("SLOT NUMBER IS %d",slot)
                 if(slot == ERR_DIRECTORY_FULL)
                 {
                     return slot;
                 }
+                //On ajoute le dossier dans le slot libre récupéré du parent
                 inode_parent->repertoire.fichiers_contenus[slot].id_inode = inode_id;
                 inode_parent->repertoire.fichiers_contenus[slot].nom = nom;
-                partition->superbloc[inode_id]->repertoire.id_parent = id_parent;
+                partition->superbloc[inode_id]->id_parent = id_parent;
                 inode_parent->repertoire.nb_fichiers = inode_parent->repertoire.nb_fichiers+1;
                 return inode_id;
             }
@@ -193,8 +215,6 @@ int create_folder(DISK *partition,char* nom,int id_parent)
         }
     }
 }
-
-//int parcourir_contenu_dossier(INODE *dossier_parent,)
 
 int remove_folder(DISK* partition,int id_dossier,mode_suppression mode)
 {
@@ -204,6 +224,10 @@ int remove_folder(DISK* partition,int id_dossier,mode_suppression mode)
     if(dossier == NULL)
     {
         return ERR_UNUSUED_INODE;
+    }
+    if(dossier->type != DOSSIER)
+    {
+        return ERR_WRONG_TYPE;
     }
     else
     {
@@ -218,7 +242,7 @@ int remove_folder(DISK* partition,int id_dossier,mode_suppression mode)
             //Si le dossier n'est pas la racine, on le supprime de son parent
             if(id_dossier != ROOT_INODE_ID)
             {
-                int id_parent = dossier->repertoire.id_parent;
+                int id_parent = dossier->id_parent;
                 int slot = seek_folder_slot_from_inode(partition->superbloc[id_parent],id_dossier);
 
                 if(slot == ERR_INODE_ID_NOT_FOUND_IN_FOLDER)
@@ -235,4 +259,75 @@ int remove_folder(DISK* partition,int id_dossier,mode_suppression mode)
     }
 }
 
-//int create_file(DISK *partition,char *nom,)
+int create_file(DISK *partition,char *nom,int id_parent)
+{
+    int inode_id;
+    INODE * parent = partition->superbloc[id_parent];
+
+    if(parent == NULL)
+    {
+        return ERR_UNUSUED_INODE;
+    }
+    else if(parent->type == FICHIER)
+    {
+        return ERR_INODE_IS_NOT_A_FOLDER;
+    }
+    else if(parent->repertoire.nb_fichiers == CONTENU_MAX_REPERTOIRES)
+    {
+        return ERR_DIRECTORY_FULL;
+    }
+    else
+    {
+        if(!check_inode_name_is_unique(parent,nom))
+        {
+            return ERR_NAME_ALREADY_USED_IN_FOLDER;
+        }
+        DEBUG("CREATION DOSSIER")
+        int slot = seek_free_slot_folder(parent);
+        inode_id = Creer_INODE(partition,nom,FICHIER);
+        if(inode_id == ERR_NO_FREE_INODE)
+        {
+            return inode_id;
+        }
+        parent->repertoire.fichiers_contenus[slot].id_inode = inode_id;
+        parent->repertoire.fichiers_contenus[slot].nom = nom;
+        parent->repertoire.nb_fichiers = parent->repertoire.nb_fichiers + 1;
+        partition->superbloc[inode_id]->id_parent = id_parent;
+
+        return inode_id;
+    }
+}
+
+int remove_file(DISK* partition,int id_fichier)
+{
+
+    INODE * fichier_cible = partition->superbloc[id_fichier];
+
+
+    if(fichier_cible == NULL)
+    {
+        return ERR_UNUSUED_INODE;
+    }
+    if(fichier_cible->type != FICHIER)
+    {
+        return ERR_WRONG_TYPE;
+    }
+
+    int id_parent = fichier_cible->id_parent;
+    INODE * parent = partition->superbloc[id_parent];
+
+    if(parent == NULL)
+    {
+        return ERR_UNUSUED_PARENT_INODE;
+    }
+    else
+    {
+        Remove_INODE(partition,id_fichier);
+        int slot = seek_folder_slot_from_inode(partition->superbloc[id_parent],id_fichier);
+        parent->repertoire.fichiers_contenus[slot].id_inode = -1;
+        parent->repertoire.fichiers_contenus[slot].nom = NULL;
+        parent->repertoire.nb_fichiers = parent->repertoire.nb_fichiers - 1;
+
+        return 0;
+    }
+}

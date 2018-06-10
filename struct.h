@@ -1,9 +1,13 @@
 #include <time.h>
+#include <stdbool.h>
+
 #define NB_MAX_BLOCS 16
 #define TAILLE_MAX_BLOC 1024
 #define TAILLE_MAX_FILE (NB_MAX_BLOCS * TAILLE_MAX_BLOC)
 #define CONTENU_MAX_REPERTOIRES 64
 #define TAILLE_MAX_DISK 1024
+
+
 
 
 typedef struct LISTE_Fichier LISTE_Fichier;
@@ -39,7 +43,6 @@ typedef struct
 typedef struct
 {
     int nb_fichiers;
-    int id_parent;
     ENTREE_REPERTOIRE fichiers_contenus[CONTENU_MAX_REPERTOIRES];
 }BLOC_REPERTOIRE;
 
@@ -47,6 +50,7 @@ typedef struct
 {
     int id;
     char* nom;
+    int id_parent;
     type_inode type;
     BLOC blocs[NB_MAX_BLOCS];
     BLOC_REPERTOIRE repertoire;

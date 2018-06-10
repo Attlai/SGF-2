@@ -14,6 +14,8 @@ bool test_creer_INODE_11place();
 bool test_remove_INODE();
 bool test_creer_dossier();
 bool test_remove_folder();
+bool test_creer_fichier();
+bool test_remove_fichier();
 
 
 
@@ -47,7 +49,8 @@ int main()
     TEST(test_remove_INODE)
     TEST(test_creer_dossier)
     TEST(test_remove_folder)
-
+    TEST(test_creer_fichier)
+    TEST(test_remove_fichier)
 
     return 0;
 }
@@ -101,7 +104,7 @@ bool test_creer_INODE_normal()
 
     int inode_id = Creer_INODE(&p1,"root",FICHIER);
 
-    TESTU0(inode_id == ERRNO_NO_FREE_INODE,
+    TESTU0(inode_id == ERR_NO_FREE_INODE,
         "ERR CREA INODE : NO FREE SPACE ON DISK")
 
     TESTU1(p1.superbloc[inode_id] == NULL,
@@ -124,7 +127,7 @@ bool test_creer_INODE_11place()
 
     int inode_id = Creer_INODE(&p1,"root",FICHIER);
 
-    TESTU0(inode_id == ERRNO_NO_FREE_INODE,
+    TESTU0(inode_id == ERR_NO_FREE_INODE,
         "ERR CREA INODE : NO FREE SPACE ON DISK")
 
     TESTU1(inode_id != 11,
@@ -149,7 +152,7 @@ bool test_creer_INODE_full()
 
     int inode_id = Creer_INODE(&p1,"root",FICHIER);
 
-    TESTU0(inode_id != ERRNO_NO_FREE_INODE,
+    TESTU0(inode_id != ERR_NO_FREE_INODE,
         "ERR CREA INODE FULL: FREE SPACE ON DISK")
 
     END_TEST
@@ -171,7 +174,7 @@ bool test_remove_INODE()
     Remove_INODE(&p1,50);
     inode_id = Trouver_place_DISK(&p1);
 
-    TESTU0(inode_id == ERRNO_NO_FREE_INODE,
+    TESTU0(inode_id == ERR_NO_FREE_INODE,
            "ERR RM INODE : SLOT NOT FREED")
 
     TESTU1(inode_id != 50,
@@ -203,7 +206,7 @@ bool test_creer_dossier()
     TESTU1(strcmp(entree_dossier.nom,"dossier 1") != 0,
         "ERR CREA DOSSIER : WRONG CHILD NAME (%s)",entree_dossier.nom)
 
-    TESTU1(p1.superbloc[inode_id]->repertoire.id_parent != ROOT_INODE_ID,
+    TESTU1(p1.superbloc[inode_id]->id_parent != ROOT_INODE_ID,
         "ERR CREA DOSSIER : WRONG PARENT ID (%d)",entree_dossier.id_inode)
 
 
@@ -235,6 +238,83 @@ bool test_remove_folder()
 
     TESTU0(p1.superbloc[ROOT_INODE_ID]->repertoire.nb_fichiers != 0,
         "ERR RM DOSSIER : ROOT STILL HAS CHILD")
+
+    END_TEST
+}
+
+bool test_creer_fichier()
+{
+    INIT_TEST
+
+    DISK p1;
+    Initialiser_DISK(&p1);
+
+    create_folder(&p1,"root",ROOT_PARENT_ID);
+    create_file(&p1,"fichier 1",ROOT_INODE_ID);
+    create_file(&p1,"fichier 2",ROOT_INODE_ID);
+
+    BLOC_REPERTOIRE root_contenu = p1.superbloc[ROOT_INODE_ID]->repertoire;
+
+    TESTU1(root_contenu.nb_fichiers != 2,
+        "ERR CREA FICHIER : WRONG FILE NUMBER (%d)",root_contenu.nb_fichiers)
+
+    char* name[2] = {NULL};
+    int k = 0;
+    for(int i=0;i<CONTENU_MAX_REPERTOIRES;i++)
+    {
+        if(root_contenu.fichiers_contenus[i].id_inode != -1)
+        {
+            name[k] = root_contenu.fichiers_contenus[i].nom;
+            k++;
+        }
+    }
+
+    TESTU1(k!=2,
+        "ERR CREA FICHIERS : WRONG INSTANCIATED INODES NUMBER (%d)",k)
+
+    for(int i=0;i<2;i++)
+    {
+        TESTU1(((strcmp(name[i],"fichier 1")!=0)&&((strcmp(name[i],"fichier 2")!=0))),
+            "ERR CREA FICHIERS : WRONG FIRST FILE NAME IN FOLDER (%s)",name[i])
+    }
+
+    END_TEST
+}
+
+bool test_remove_fichier()
+{
+    INIT_TEST
+
+    DISK p1;
+    Initialiser_DISK(&p1);
+    int inode_id;
+
+    create_folder(&p1,"root",ROOT_PARENT_ID);
+    inode_id = create_file(&p1,"fichier 1",ROOT_INODE_ID);
+    create_file(&p1,"fichier 2",ROOT_INODE_ID);
+    remove_file(&p1,inode_id);
+
+    BLOC_REPERTOIRE root_contenu = p1.superbloc[ROOT_INODE_ID]->repertoire;
+
+    TESTU1(root_contenu.nb_fichiers != 1,
+        "ERR RM FICHIER : WRONG FILE NUMBER (%d)",root_contenu.nb_fichiers)
+
+    int nb_fichiers = 0;
+    int k;
+    for(int i=0;i<CONTENU_MAX_REPERTOIRES;i++)
+    {
+        if(root_contenu.fichiers_contenus[i].id_inode != -1)
+        {
+            nb_fichiers++;
+            k = i;
+        }
+    }
+
+    TESTU1(nb_fichiers != 1,
+        "ERR RM FICHIER : BAD INODE CLEANING (%d full instead of 1)",nb_fichiers)
+
+    TESTU1(strcmp("fichier 2",root_contenu.fichiers_contenus[k].nom)!=0,
+           "ERR RM FICHIER : WRONG FILE LEFT (%s)",root_contenu.fichiers_contenus[k].nom)
 
     END_TEST
 }

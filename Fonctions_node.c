@@ -56,7 +56,7 @@ int Trouver_place_DISK(DISK *partition)
     return ERRNO_NO_FREE_INODE;
 }
 
-
+//Fonction qui ajouter un inode à un DISK, en renseignant le type de fichier, et renvoie l'indice (potentiellement erreur)
 int Creer_INODE(DISK* partition,char *name,type_inode type)
 {
     INODE * node = NULL;
@@ -76,4 +76,11 @@ int Creer_INODE(DISK* partition,char *name,type_inode type)
     node->metadata.date = clock();
 
     return indice;
+}
+
+int Remove_INODE(DISK* partition,int rm_id)
+{
+    INODE *rm_inode = partition->superbloc[rm_id];
+    free(rm_inode);
+    partition->superbloc[rm_id] = NULL;
 }

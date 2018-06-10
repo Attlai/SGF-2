@@ -11,6 +11,7 @@ bool test_initialisation_DISK();
 bool test_creer_INODE_normal();
 bool test_creer_INODE_full();
 bool test_creer_INODE_11place();
+bool test_remove_INODE();
 
 
 
@@ -40,6 +41,9 @@ int main()
     TEST(test_creer_INODE_normal)
     TEST(test_creer_INODE_11place)
     TEST(test_creer_INODE_full)
+    TEST(test_remove_INODE)
+
+
 
     return 0;
 }
@@ -143,6 +147,31 @@ bool test_creer_INODE_full()
 
     TESTU0(inode_id != ERRNO_NO_FREE_INODE,
         "ERR CREA INODE FULL: FREE SPACE ON DISK")
+
+    END_TEST
+}
+
+bool test_remove_INODE()
+{
+    INIT_TEST
+
+    DISK p1;
+    Initialiser_DISK(&p1);
+    int inode_id;
+
+    for(int i=0;i<TAILLE_MAX_DISK;i++)
+    {
+        Creer_INODE(&p1,"test",FICHIER);
+    }
+
+    Remove_INODE(&p1,50);
+    inode_id = Trouver_place_DISK(&p1);
+
+    TESTU0(inode_id == ERRNO_NO_FREE_INODE,
+           "ERR RM INODE : SLOT NOT FREED")
+
+    TESTU1(inode_id != 50,
+           "ERR RM INODE : WRONG SLOT (%d)",inode_id)
 
     END_TEST
 }

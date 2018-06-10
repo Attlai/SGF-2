@@ -4,16 +4,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#include "error.h"
+#include "macro.h"
 
-#define NEW(type) malloc(sizeof(type));
-
-#ifdef DEBUG_ON
-#define DEBUG(msg) printf(msg);
-#define DEBUG1(msg,i) printf(msg,i);
-#else
-#define DEBUG(msg)
-#define DEBUG1(msg,i)
-#endif //
 
 /*//Fonction d'unitialisation d'un META
 void Initialiser_META(META* metadata)

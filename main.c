@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "struct.h"
-#include "fonctions_liste.h"
 #include "fonctions_node.h"
+#include "error.h"
+#include "macro.h"
 
 
 bool test_initialisation_INODE();
@@ -16,27 +17,6 @@ bool test_creer_dossier();
 bool test_remove_folder();
 bool test_creer_fichier();
 bool test_remove_fichier();
-
-
-
-#define TEST(test_fonc)  printf(test_fonc()? " + %s : OK\n" : " !! %s : KO\n",  #test_fonc );
-#define INIT_TEST    bool test_ok = true;
-#define END_TEST     return test_ok;
-
-#define TESTU1(test,message,code)\
-              if(test)\
-                {\
-                printf(message, code); \
-                test_ok = false;\
-                }
-
-#define TESTU0(test,message)\
-              if(test)\
-                {\
-                printf(message); \
-                test_ok = false;\
-                }
-
 
 int main()
 {

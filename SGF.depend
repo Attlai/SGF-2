@@ -7,9 +7,10 @@
 
 1528631606 c:\users\maelr_000\desktop\bidouillage info\sgf\struct.h
 
-1528632573 source:c:\users\maelr_000\desktop\bidouillage info\sgf\main.c
+1528634744 source:c:\users\maelr_000\desktop\bidouillage info\sgf\main.c
 	<stdio.h>
 	<stdlib.h>
+	<string.h>
 	"struct.h"
 	"fonctions_liste.h"
 	"fonctions_node.h"

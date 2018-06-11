@@ -67,6 +67,7 @@ int Creer_INODE(DISK* partition,char *name,type_inode type)
     return indice;
 }
 
+//Fonction de suppression d'un INODE, en donnant son id
 int Remove_INODE(DISK* partition,int rm_id)
 {
     INODE *rm_inode = partition->superbloc[rm_id];
@@ -80,6 +81,7 @@ int Remove_INODE(DISK* partition,int rm_id)
     return 0;
 }
 
+//Fonction qui retourne un slot libre du contenu d'un répertoire, ou une erreur
 int seek_free_slot_folder(INODE* dossier_parent)
 {
     for(int i=0;i<CONTENU_MAX_REPERTOIRES;i++)
@@ -95,6 +97,7 @@ int seek_free_slot_folder(INODE* dossier_parent)
     return ERR_DIRECTORY_FULL;
 }
 
+//Fonction vérifiant qu'un fichier/dossier avec un nom donné n'existe pas déjà dans le dossier
 bool check_inode_name_is_unique(INODE *parent,char *name)
 {
     for(int i = 0;i<CONTENU_MAX_REPERTOIRES;i++)
@@ -112,6 +115,7 @@ bool check_inode_name_is_unique(INODE *parent,char *name)
     return true;
 }
 
+//On cherche le slot sur lequel un fichier avec un id donné est placé dans un dossier
 int seek_folder_slot_from_inode(INODE* dossier,int id_fichier)
 {
     for(int i=0;i<CONTENU_MAX_REPERTOIRES;i++)
@@ -125,6 +129,7 @@ int seek_folder_slot_from_inode(INODE* dossier,int id_fichier)
     return ERR_INODE_ID_NOT_FOUND_IN_FOLDER;
 }
 
+//Fonction de creation d'un dossier
 int create_folder(DISK *partition,char* nom,int id_parent)
 {
     int inode_id;
@@ -193,6 +198,7 @@ int create_folder(DISK *partition,char* nom,int id_parent)
     }
 }
 
+//Fonction de suppression d'un fichier
 int remove_folder(DISK* partition,int id_dossier,mode_suppression mode)
 {
     INODE * dossier = partition->superbloc[id_dossier];
@@ -236,6 +242,7 @@ int remove_folder(DISK* partition,int id_dossier,mode_suppression mode)
     }
 }
 
+//Fonction de création d'un fichier
 int create_file(DISK *partition,char *nom,int id_parent)
 {
     int inode_id;
@@ -275,6 +282,7 @@ int create_file(DISK *partition,char *nom,int id_parent)
     }
 }
 
+//Fonction de suppression d'un fichier
 int remove_file(DISK* partition,int id_fichier)
 {
 

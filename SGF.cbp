@@ -31,10 +31,12 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="fonctions_liste.c">
+		<Unit filename="Fonctions_node.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="fonctions_liste.h" />
+		<Unit filename="Fonctions_node.h" />
+		<Unit filename="error.h" />
+		<Unit filename="macro.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

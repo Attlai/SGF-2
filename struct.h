@@ -22,30 +22,38 @@ typedef enum{
     NORMAL,RECURSIF
 }mode_suppression;
 
+//BLOC représente un bloc de data d'un fichier
 typedef struct
 {
     char contenu[TAILLE_MAX_BLOC];
 
 }BLOC;
 
+//META représente les métadonnées d'un INODE
 typedef struct
 {
     int taille_fichier;
     clock_t date;
 }META;
 
+//ENTRE_REPERTOIRE représente une entrée d'un répertoire, soit un couple (id_inode, nom)
 typedef struct
 {
     char* nom;
     int id_inode;
 }ENTREE_REPERTOIRE;
 
+//BLOC_REPERTOIRE représente le bloc de data unique sur lequel un inode de dossier pointe
+//Il contient uniquement des couples de (id,nom) des fichiers qu'il contient
 typedef struct
 {
     int nb_fichiers;
     ENTREE_REPERTOIRE fichiers_contenus[CONTENU_MAX_REPERTOIRES];
 }BLOC_REPERTOIRE;
 
+//INODE représente l'inode d'un fichier/dossier
+//BLOC et BLOC_REPERTOIRE représente en réalité la même chose: le bloc sur lequel pointe l'inode
+//Cependant, dans le cas d'un dossier, il s'agira d'un bloc unique
 typedef struct
 {
     int id;
@@ -57,6 +65,7 @@ typedef struct
     META metadata;
 }INODE;
 
+//DISK représente un bloc de stockage où sont stockés tous les inodes
 typedef struct
 {
     INODE *superbloc[TAILLE_MAX_DISK];

@@ -1,3 +1,5 @@
+//Fichier contenant toutes les macroconstantes correspondant aux codes d'erreur renvoyées
+
 #define ERR_NO_FREE_INODE  -10
 #define ERR_ROOT_ALRDY_CREATED  -11
 #define ERR_PARENT_NOT_FOLDER -12

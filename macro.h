@@ -1,3 +1,6 @@
+//Fichiers possédant toutes les macro
+//----- Pour activer les messages d'erreur DEBUG, il faut définir une macroconstante DEBUG_ON dans struct.h-----
+
 #define ROOT_INODE_ID 1
 #define ROOT_PARENT_ID 0
 

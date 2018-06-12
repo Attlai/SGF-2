@@ -21,7 +21,8 @@ int main()
     TEST(test_remove_folder)
     TEST(test_creer_fichier)
     TEST(test_remove_fichier)
-    TEST(test_list_content)
+    //TEST(test_list_content)
+    TEST(test_initialisation_system)
 
     return 0;
 }

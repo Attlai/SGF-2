@@ -310,3 +310,31 @@ bool test_list_content()
 
 }
 
+bool test_initialisation_system()
+{
+    INIT_TEST
+
+    int current_id = 0;
+    DISK partition = Initialize_System(&current_id);
+
+    TESTU1(current_id != 1,
+        "ERR INIT : WRONG STARTING ID (%d)",current_id)
+
+    int indice;
+
+    bool all_null = true;
+    for(int i= 2;i<TAILLE_MAX_DISK;i++)
+    {
+        if(partition.superbloc[i] != NULL)
+        {
+            all_null = false;
+            indice = i;
+            break;
+        }
+    }
+
+    TESTU1(all_null == false,
+        "ERR INIT : ATLEAST ONE BLOCK NOT NULL (%d)",indice)
+
+    END_TEST
+}

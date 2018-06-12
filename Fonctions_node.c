@@ -355,3 +355,14 @@ int list_content_folder(DISK *partition,int id_dossier_pere)
     printf("\n");
     return 0;
 }
+
+DISK Initialize_System(int* current_id)
+{
+    DISK partition;
+    Initialiser_DISK(&partition);
+    create_folder(&partition,"root",ROOT_PARENT_ID);
+    *current_id = ROOT_INODE_ID;
+
+    return partition;
+}
+

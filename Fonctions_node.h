@@ -16,3 +16,4 @@ int create_file(DISK *partition,char *nom,int id_parent);
 bool check_inode_name_is_unique(INODE *parent,char *name);
 int remove_file(DISK* partition,int id_fichier);
 int list_content_folder(DISK *partition,int id_dossier_pere);
+DISK Initialize_System(int* current_id);

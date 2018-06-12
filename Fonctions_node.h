@@ -17,3 +17,4 @@ bool check_inode_name_is_unique(INODE *parent,char *name);
 int remove_file(DISK* partition,int id_fichier);
 int list_content_folder(DISK *partition,int id_dossier_pere);
 DISK Initialize_System(int* current_id);
+int change_current_directory(DISK* partition,int *current_id,char* nom_destination);

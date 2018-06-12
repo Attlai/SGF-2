@@ -23,6 +23,7 @@ int main()
     TEST(test_remove_fichier)
     //TEST(test_list_content)
     TEST(test_initialisation_system)
+    TEST(test_changement_de_location)
 
     return 0;
 }

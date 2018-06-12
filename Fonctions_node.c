@@ -366,3 +366,39 @@ DISK Initialize_System(int* current_id)
     return partition;
 }
 
+int change_current_directory(DISK* partition,int *current_id,char* nom_destination)
+{
+    int id_pere = *current_id;
+
+    if(partition->superbloc[id_pere] == NULL)
+    {
+        return ERR_UNUSUED_PARENT_INODE;
+    }
+    if(partition->superbloc[id_pere] == FICHIER)
+    {
+        return ERR_PARENT_NOT_FOLDER;
+    }
+
+    INODE * parent= partition->superbloc[id_pere];
+
+    for(int i =0;i<CONTENU_MAX_REPERTOIRES;i++)
+    {
+        if(parent->repertoire.fichiers_contenus[i].id_inode != -1)
+        {
+            if(strcmp(parent->repertoire.fichiers_contenus[i].nom,nom_destination)==0 )
+            {
+                int indice = parent->repertoire.fichiers_contenus[i].id_inode;
+                if(partition->superbloc[indice]->type == FICHIER)
+                {
+                    return ERR_DESTINATION_NOT_A_FOLDER;
+                }
+                *current_id = parent->repertoire.fichiers_contenus[i].id_inode;
+                return 0;
+            }
+        }
+    }
+    return ERR_FOLDER_NOT_FOUND;
+
+
+}
+

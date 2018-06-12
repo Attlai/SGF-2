@@ -10,3 +10,4 @@ bool test_creer_fichier();
 bool test_remove_fichier();
 bool test_list_content();
 bool test_initialisation_system();
+bool test_changement_de_location();

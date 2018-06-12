@@ -338,3 +338,40 @@ bool test_initialisation_system()
 
     END_TEST
 }
+
+bool test_changement_de_location()
+{
+    INIT_TEST
+
+    DISK p1;
+    Initialiser_DISK(&p1);
+    int code_erreur = 0;
+    int current_id = ROOT_INODE_ID;
+
+    create_folder(&p1,"root",ROOT_PARENT_ID);
+    create_file(&p1,"fichier 1",ROOT_INODE_ID);
+    create_file(&p1,"fichier 2",ROOT_INODE_ID);
+    create_file(&p1,"fichier 3",ROOT_INODE_ID);
+    create_folder(&p1,"dossier 1",ROOT_INODE_ID);
+    create_file(&p1,"fichier 4",ROOT_INODE_ID);
+
+    code_erreur = change_current_directory(&p1,&current_id,"fichier 2");
+
+    TESTU0(code_erreur != ERR_DESTINATION_NOT_A_FOLDER,
+        "ERR CD : CD ON A FILE")
+
+    current_id = ROOT_INODE_ID;
+    code_erreur = change_current_directory(&p1,&current_id,"dossier 2");
+
+    TESTU0(code_erreur != ERR_FOLDER_NOT_FOUND,
+        "ERR CD : CD ON A NON EXISTANT FOLDER")
+
+    current_id = ROOT_INODE_ID;
+    code_erreur = change_current_directory(&p1,&current_id,"dossier 1");
+
+    TESTU1(current_id != 5,
+        "ERR CD : WRONG NEW LOCATION (%s)",p1.superbloc[current_id]->nom)
+
+    END_TEST
+
+}

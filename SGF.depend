@@ -9,16 +9,20 @@
 	<time.h>
 	<stdbool.h>
 
-1528703021 source:c:\users\maelr_000\desktop\bidouillage info\sgf\main.c
+1528811051 source:c:\users\maelr_000\desktop\bidouillage info\sgf\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
 	"struct.h"
 	"fonctions_node.h"
 	"error.h"
 	"macro.h"
+	"fonctions_test.h"
 
 1528643497 c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_liste.h
 	<stdbool.h>
 
-1528702666 source:c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_node.c
+1528811431 source:c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_node.c
 	"struct.h"
 	"fonctions_node.h"
 	<stdlib.h>
@@ -28,13 +32,13 @@
 	"error.h"
 	"macro.h"
 
-1528662485 c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_node.h
+1528811408 c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_node.h
 
-1528703174 c:\users\maelr_000\desktop\bidouillage info\sgf\error.h
+1528810033 c:\users\maelr_000\desktop\bidouillage info\sgf\error.h
 
 1528703264 c:\users\maelr_000\desktop\bidouillage info\sgf\macro.h
 
-1528703123 source:c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_test.c
+1528812137 source:c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_test.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -44,5 +48,5 @@
 	"error.h"
 	"fonctions_node.h"
 
-1528702986 c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_test.h
+1528811477 c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_test.h
 

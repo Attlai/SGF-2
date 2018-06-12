@@ -36,6 +36,10 @@
 		</Unit>
 		<Unit filename="Fonctions_node.h" />
 		<Unit filename="error.h" />
+		<Unit filename="fonctions_test.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="fonctions_test.h" />
 		<Unit filename="macro.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />

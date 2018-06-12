@@ -316,3 +316,42 @@ int remove_file(DISK* partition,int id_fichier)
         return 0;
     }
 }
+
+int list_content_folder(DISK *partition,int id_dossier_pere)
+{
+    INODE * dossier_parent = partition->superbloc[id_dossier_pere];
+
+    if(dossier_parent == NULL)
+    {
+        return ERR_UNUSUED_PARENT_INODE;
+    }
+    if(dossier_parent->type != DOSSIER)
+    {
+        return ERR_PARENT_NOT_FOLDER;
+    }
+    printf("%s :\n",dossier_parent->nom);
+    if(dossier_parent->repertoire.nb_fichiers == 0)
+    {
+        printf("    Dossier vide\n");
+        return ERR_EMPTY_FOLDER;
+    }
+    int indice = 0;
+    for(int i=0;i<CONTENU_MAX_REPERTOIRES;i++)
+    {
+        if(dossier_parent->repertoire.fichiers_contenus[i].id_inode != -1)
+        {
+            indice = dossier_parent->repertoire.fichiers_contenus[i].id_inode;
+            printf("    %s ",partition->superbloc[indice]->nom);
+            if(partition->superbloc[indice]->type == FICHIER)
+            {
+                printf(" (file)\n");
+            }
+            else
+            {
+                printf(" (folder)\n");
+            }
+        }
+    }
+    printf("\n");
+    return 0;
+}

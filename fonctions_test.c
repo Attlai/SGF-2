@@ -277,3 +277,36 @@ bool test_remove_fichier()
     END_TEST
 }
 
+bool test_list_content()
+{
+    INIT_TEST
+
+    DISK p1;
+    Initialiser_DISK(&p1);
+    int code_erreur = 0;
+
+    create_folder(&p1,"root",ROOT_PARENT_ID);
+    create_file(&p1,"fichier 1",ROOT_INODE_ID);
+    create_file(&p1,"fichier 2",ROOT_INODE_ID);
+    create_file(&p1,"fichier 3",ROOT_INODE_ID);
+    create_folder(&p1,"dossier 1",ROOT_INODE_ID);
+
+    code_erreur = list_content_folder(&p1,2);
+    TESTU0(code_erreur != ERR_PARENT_NOT_FOLDER,
+        "ERR LIST : CAN LIST ON A FILE")
+
+    code_erreur = list_content_folder(&p1,60);
+    TESTU0(code_erreur != ERR_UNUSUED_PARENT_INODE,
+        " ERR LIST : CAN LIST ON UNUSUED INODE")
+
+    code_erreur = list_content_folder(&p1,5);
+    TESTU0(code_erreur != ERR_EMPTY_FOLDER,
+        " ERR LIST : DONT RETURN EMPTY FOLDER")
+
+    list_content_folder(&p1,1);
+    list_content_folder(&p1,5);
+
+    END_TEST
+
+}
+

@@ -61,9 +61,11 @@ int Creer_INODE(DISK* partition,char *name,type_inode type)
     node->id_parent = -1;
     node->nom = name;
     node->metadata.taille_fichier = 0;
-    node->metadata.date = clock();
     node->type = type;
-
+    
+    time_t now = time(0);
+    strftime(node->metadata.date, 17, "%Y/%m/%d %H:%M", localtime (&now));
+    
     return indice;
 }
 
@@ -348,12 +350,13 @@ int list_content_folder(DISK *partition,int id_dossier_pere)
             printf("	  %s ",partition->superbloc[indice]->nom);
             if(partition->superbloc[indice]->type == FICHIER)
             {
-                printf(" (file)\n");
+                printf("\tFile");
             }
             else
             {
-                printf(" (folder)\n");
+                printf("\tFolder");
             }
+            printf("\t%s\n",partition->superbloc[indice]->metadata.date);
         }
     }
     printf("\n");

@@ -5,7 +5,7 @@
 	<stdbool.h>
 	<stdio.h>
 
-1528702879 c:\users\maelr_000\desktop\bidouillage info\sgf\struct.h
+1528889175 c:\users\maelr_000\desktop\bidouillage info\sgf\struct.h
 	<time.h>
 	<stdbool.h>
 
@@ -32,13 +32,13 @@
 	"error.h"
 	"macro.h"
 
-1528821473 c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_node.h
+1528888005 c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_node.h
 
-1528821080 c:\users\maelr_000\desktop\bidouillage info\sgf\error.h
+1528897333 c:\users\maelr_000\desktop\bidouillage info\sgf\error.h
 
 1528703264 c:\users\maelr_000\desktop\bidouillage info\sgf\macro.h
 
-1528821500 source:c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_test.c
+1528882667 source:c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_test.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -46,7 +46,7 @@
 	"fonctions_test.h"
 	"macro.h"
 	"error.h"
-	"fonctions_node.h"
+	"Fonctions_node.h"
 
 1528821534 c:\users\maelr_000\desktop\bidouillage info\sgf\fonctions_test.h
 

@@ -26,7 +26,7 @@ typedef struct
 typedef struct
 {
     int taille_fichier;
-    clock_t date;
+    char date[17];
 }META;
 
 //ENTRE_REPERTOIRE représente une entrée d'un répertoire, soit un couple (id_inode, nom)

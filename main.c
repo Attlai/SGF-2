@@ -30,46 +30,50 @@ int main()
     //TEST(test_list_content)
     TEST(test_initialisation_system)
     TEST(test_changement_de_location)
-    
-    
-    
+
+
+
     //début véritable du programme
-    
-    char* username = getenv("USER");
-	int status;
+    int status;
 	char *line;
     char **args;
     int i;
     pid_t pid, wpid;
     bool running = true;
-    
-	printDir();
-	
+
+    //On lance dans un processus fils
 	pid = fork();
 	if(pid == 0)
 	{
+	    //initialisation du system
 		int current_id = 0;
 		DISK partition = Initialize_System(&current_id);
+		//boucle d'exécution du shell
 		do
 		{
 			printf("  Current directory : %s\n ",partition.superbloc[current_id]->nom);
 			printf("  > ");
+			//on récupère la ligne tappée
 			line = lire_ligne();
+			//On la découpe en arguments
 			args = split_ligne(line);
+			//On envoie les arguments dans la fonction qui va exécuter les commandes
 			status = execution_cmd(args,&partition,&current_id);
+			//Et enfin, on récupère les erreurs et on affiche les messages d'erreur correspondants
 			display_error(status);
+			//En cas de code "d'erreur" EXIT, on quitte la boucle -> fin du programme
 			if(status == EXIT)
 				running = false;
-				
+
 		}while(running);
-			
+
 		exit(0);
 	}
 	else
 	{
 		wait(NULL);
 	}
-			
+
     return 0;
 }
 

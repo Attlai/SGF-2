@@ -62,10 +62,10 @@ int Creer_INODE(DISK* partition,char *name,type_inode type)
     node->nom = name;
     node->metadata.taille_fichier = 0;
     node->type = type;
-    
+
     time_t now = time(0);
     strftime(node->metadata.date, 17, "%Y/%m/%d %H:%M", localtime (&now));
-    
+
     return indice;
 }
 
@@ -123,7 +123,7 @@ int seek_folder_slot_from_inode(INODE* dossier,int id_fichier)
     for(int i=0;i<CONTENU_MAX_REPERTOIRES;i++)
     {
         if(dossier->repertoire.fichiers_contenus[i].id_inode == id_fichier)
-        {	
+        {
             DEBUG1("ID TROUVE SUR SLOT %d DU DOSSIER\n",i)
             return i;
         }
@@ -193,7 +193,7 @@ int create_folder(DISK *partition,char* nom,int id_parent)
                 inode_parent->repertoire.fichiers_contenus[slot].nom = nom;
                 partition->superbloc[inode_id]->id_parent = id_parent;
                 inode_parent->repertoire.nb_fichiers = inode_parent->repertoire.nb_fichiers+1;
-                
+
                 return inode_id;
             }
 
@@ -224,7 +224,7 @@ int remove_folder(DISK* partition,int id_dossier,mode_suppression mode)
         }
         else
         {
-            
+
             //Si le dossier n'est pas la racine, on le supprime de son parent
             if(id_dossier != ROOT_INODE_ID)
             {
@@ -389,14 +389,14 @@ int change_current_directory(DISK* partition,int *current_id,char* nom_destinati
     }
 
     INODE * parent= partition->superbloc[id_pere];
-    
+
     //Si jamais le nom la chaine de caractère de destination est "..", on remonte dans le père
     //Comme le root a été initialisé comme étant père de lui-même, si on va dans le père de root, on ne bouge pas
     if(strcmp(nom_destination,"..")==0)
     {
 		*current_id = parent->id_parent;
 	}
-		
+
 
     for(int i =0;i<CONTENU_MAX_REPERTOIRES;i++)
     {
@@ -419,10 +419,11 @@ int change_current_directory(DISK* partition,int *current_id,char* nom_destinati
 
 }
 
+//Fonction cherchant l'id d'un fichier/dossier à partir de son nom, à l'intérieur d'un dossier parent
 int seek_id(DISK* partition,int current_id,char* nom)
 {
 	INODE * parent= partition->superbloc[current_id];
-	
+
 	for(int i =0;i<CONTENU_MAX_REPERTOIRES;i++)
     {
         if(parent->repertoire.fichiers_contenus[i].id_inode != -1)

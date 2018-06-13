@@ -27,7 +27,7 @@ void commande_cd(char **args)
 	else
 	{
 		char * destination;
-		
+
 	}
 }
 
@@ -47,7 +47,7 @@ char *lire_ligne(void)
 	int position = 0;
 	char *tampon = malloc(sizeof(char) * taille_tampon);
 	int c;
-	if (!tampon) 
+	if (!tampon)
 	{
 		exit(EXIT_FAILURE);
 	}
@@ -58,23 +58,23 @@ char *lire_ligne(void)
 		c = getchar();
 
 		// si on a EOF, on le remplace avec null caractere .
-		if (c == EOF || c == '\n') 
+		if (c == EOF || c == '\n')
 		{
 			tampon[position] = '\0';
 			return tampon;
-		} 
-		else 
+		}
+		else
 		{
 			tampon[position] = c;
 		}
 		position++;
 
 		// si on depasse le buffer ,reallocation
-		if (position >= taille_tampon) 
+		if (position >= taille_tampon)
 		{
 			taille_tampon += TAMPON;
 			tampon = realloc(tampon, taille_tampon);
-			if (!tampon) 
+			if (!tampon)
 			{
 				exit(EXIT_FAILURE);
 			}
@@ -89,23 +89,23 @@ char **split_ligne(char *line)
 	char **tokens = malloc(bufsize * sizeof(char*));
 	char *token;
 
-	if (!tokens) 
+	if (!tokens)
 	{
 		fprintf(stderr, "erreur allcoation\n");
 		exit(EXIT_FAILURE);
 	}
 
 	token = strtok(line, LSH_TOK_DELIM);
-	while (token != NULL) 
+	while (token != NULL)
 	{
 		tokens[position] = token;
 		position++;
 
-		if (position >= bufsize) 
+		if (position >= bufsize)
 		{
 			bufsize += LSH_TOK_BUFSIZE;
 			tokens = realloc(tokens, bufsize * sizeof(char*));
-			if (!tokens) 
+			if (!tokens)
 			{
 				fprintf(stderr, "erreur allocation\n");
 				exit(EXIT_FAILURE);
@@ -118,13 +118,15 @@ char **split_ligne(char *line)
 }
 
 //exécution des commande
+//On va appeler les primitives définies dans fonctions_nodes.c pour effectuer les commandes
+//Cette fonction sert simplement d'intermédiaire entre l'entrée utilisateur et les fonctions de bas niveau
 int execution_cmd(char **args,DISK *partition,int* current_id)
 {
 	if(args[0] == NULL)
 		return ERR_NO_ARGUMENT;
-	
+
 	char * commande = args[0];
-	
+
 	if(strcmp(commande , "my_exit")==0)
 	{
 		printf("   Now exiting\n");
@@ -150,7 +152,7 @@ int execution_cmd(char **args,DISK *partition,int* current_id)
 			return ERR_NOT_ENOUGH_ARGUMENTS;
 		if(args[2]!=NULL)
 			return ERR_TOO_MANY_ARGUMENTS;
-		
+
 		int indice = seek_id(partition,*current_id,args[1]);
 		if (indice == ERR_TARGET_NOT_FOUND)
 		{
@@ -172,7 +174,7 @@ int execution_cmd(char **args,DISK *partition,int* current_id)
 			return ERR_NOT_ENOUGH_ARGUMENTS;
 		if(args[2]!=NULL)
 			return ERR_TOO_MANY_ARGUMENTS;
-		
+
 		int indice = seek_id(partition,*current_id,args[1]);
 		if (indice == ERR_TARGET_NOT_FOUND)
 		{
@@ -220,7 +222,7 @@ int execution_cmd(char **args,DISK *partition,int* current_id)
 	{
 		return ERR_COMMAND_DOESNT_EXIST;
 	}
-	
+
 
 	return 0;
 }
@@ -247,8 +249,8 @@ int display_syntax(char * command)
 		printf("   my_cd <destination_folder_name>  :  Changes the current directory to one of the folder inside it. Type .. for the destination get back to the parent folder\n");
 	else
 		return ERR_COMMAND_DOESNT_EXIST;
-		
+
 	return 0;
-			
+
 }
 

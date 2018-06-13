@@ -1,13 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
 #include "struct.h"
-#include "fonctions_node.h"
+#include "Fonctions_node.h"
 #include "error.h"
 #include "macro.h"
 #include "fonctions_test.h"
+#include "shellTerminal.h"
 
-
+void display_error(int error_code);
 
 int main()
 {
@@ -24,7 +30,85 @@ int main()
     //TEST(test_list_content)
     TEST(test_initialisation_system)
     TEST(test_changement_de_location)
-
+    
+    
+    
+    //début véritable du programme
+    
+    char* username = getenv("USER");
+	int status;
+	char *line;
+    char **args;
+    int i;
+    pid_t pid, wpid;
+    bool running = true;
+    
+	printDir();
+	
+	pid = fork();
+	if(pid == 0)
+	{
+		int current_id = 0;
+		DISK partition = Initialize_System(&current_id);
+		do
+		{
+			printf("  Current directory : %s\n ",partition.superbloc[current_id]->nom);
+			printf("  > ");
+			line = lire_ligne();
+			args = split_ligne(line);
+			status = execution_cmd(args,&partition,&current_id);
+			display_error(status);
+			if(status == EXIT)
+				running = false;
+				
+		}while(running);
+			
+		exit(0);
+	}
+	else
+	{
+		wait(NULL);
+	}
+			
     return 0;
+}
+
+
+
+
+void display_error(int error_code)
+{
+	switch(error_code)
+	{
+		case ERR_DIRECTORY_FULL:
+			fprintf(stderr, "   Error : The directory is full\n");
+			break;
+		case ERR_NAME_ALREADY_USED_IN_FOLDER:
+			fprintf(stderr, "   Error : This name is already in use this folder\n");
+			break;
+		case ERR_TARGET_NOT_FOUND:
+			fprintf(stderr, "   Error : The specified name does not exist in this folder\n");
+			break;
+		case ERR_FOLDER_NOT_FOUND:
+			fprintf(stderr, "   Error : The specified name does not exist in this folder\n");
+			break;
+		case ERR_WRONG_TYPE:
+			fprintf(stderr, "   Error : Wrong type of the second argument\n");
+			break;
+		case ERR_DESTINATION_NOT_A_FOLDER:
+			fprintf(stderr, "   Error : The destination is not a folder\n");
+			break;
+		case ERR_TOO_MANY_ARGUMENTS:
+			fprintf(stderr, "   Error : Too many arguments\n");
+			break;
+		case ERR_NO_ARGUMENT:
+			fprintf(stderr, "   Error : No command\n");
+			break;
+		case ERR_NOT_ENOUGH_ARGUMENTS:
+			fprintf(stderr, "   Error : Arguments missing\n");
+		case ERR_COMMAND_DOESNT_EXIST:
+			fprintf(stderr, "   Error: This command doesn't exist\n");
+			break;
+	}
 }
 

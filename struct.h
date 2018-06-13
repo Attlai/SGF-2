@@ -7,13 +7,6 @@
 #define CONTENU_MAX_REPERTOIRES 64
 #define TAILLE_MAX_DISK 1024
 
-
-
-
-typedef struct LISTE_Fichier LISTE_Fichier;
-typedef struct Fichier Fichier;
-typedef struct CHEMIN CHEMIN;
-
 typedef enum {
     FICHIER,DOSSIER
 }type_inode;

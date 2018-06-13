@@ -1,5 +1,5 @@
 #include "struct.h"
-#include "fonctions_node.h"
+#include "Fonctions_node.h"
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -121,7 +121,7 @@ int seek_folder_slot_from_inode(INODE* dossier,int id_fichier)
     for(int i=0;i<CONTENU_MAX_REPERTOIRES;i++)
     {
         if(dossier->repertoire.fichiers_contenus[i].id_inode == id_fichier)
-        {
+        {	
             DEBUG1("ID TROUVE SUR SLOT %d DU DOSSIER\n",i)
             return i;
         }
@@ -191,6 +191,7 @@ int create_folder(DISK *partition,char* nom,int id_parent)
                 inode_parent->repertoire.fichiers_contenus[slot].nom = nom;
                 partition->superbloc[inode_id]->id_parent = id_parent;
                 inode_parent->repertoire.nb_fichiers = inode_parent->repertoire.nb_fichiers+1;
+                
                 return inode_id;
             }
 
@@ -198,7 +199,7 @@ int create_folder(DISK *partition,char* nom,int id_parent)
     }
 }
 
-//Fonction de suppression d'un fichier
+//Fonction de suppression d'un dossier
 int remove_folder(DISK* partition,int id_dossier,mode_suppression mode)
 {
     INODE * dossier = partition->superbloc[id_dossier];
@@ -221,7 +222,7 @@ int remove_folder(DISK* partition,int id_dossier,mode_suppression mode)
         }
         else
         {
-            Remove_INODE(partition,id_dossier);
+            
             //Si le dossier n'est pas la racine, on le supprime de son parent
             if(id_dossier != ROOT_INODE_ID)
             {
@@ -236,6 +237,7 @@ int remove_folder(DISK* partition,int id_dossier,mode_suppression mode)
                 inode_parent->repertoire.fichiers_contenus[slot].id_inode = -1;
                 inode_parent->repertoire.fichiers_contenus[slot].nom = NULL;
                 inode_parent->repertoire.nb_fichiers = inode_parent->repertoire.nb_fichiers-1;
+                Remove_INODE(partition,id_dossier);
             }
             return 0;
         }
@@ -307,16 +309,18 @@ int remove_file(DISK* partition,int id_fichier)
     }
     else
     {
-        Remove_INODE(partition,id_fichier);
+        ;
         int slot = seek_folder_slot_from_inode(partition->superbloc[id_parent],id_fichier);
         parent->repertoire.fichiers_contenus[slot].id_inode = -1;
         parent->repertoire.fichiers_contenus[slot].nom = NULL;
         parent->repertoire.nb_fichiers = parent->repertoire.nb_fichiers - 1;
+        Remove_INODE(partition,id_fichier);
 
         return 0;
     }
 }
 
+//Fonctions affichant la liste des dossiers/fichiers contenus dans un dossier
 int list_content_folder(DISK *partition,int id_dossier_pere)
 {
     INODE * dossier_parent = partition->superbloc[id_dossier_pere];
@@ -329,11 +333,11 @@ int list_content_folder(DISK *partition,int id_dossier_pere)
     {
         return ERR_PARENT_NOT_FOLDER;
     }
-    printf("%s :\n",dossier_parent->nom);
+    printf("    %s :\n",dossier_parent->nom);
     if(dossier_parent->repertoire.nb_fichiers == 0)
     {
-        printf("    Dossier vide\n");
-        return ERR_EMPTY_FOLDER;
+        printf("	   Dossier vide\n");
+        return 0;
     }
     int indice = 0;
     for(int i=0;i<CONTENU_MAX_REPERTOIRES;i++)
@@ -341,7 +345,7 @@ int list_content_folder(DISK *partition,int id_dossier_pere)
         if(dossier_parent->repertoire.fichiers_contenus[i].id_inode != -1)
         {
             indice = dossier_parent->repertoire.fichiers_contenus[i].id_inode;
-            printf("    %s ",partition->superbloc[indice]->nom);
+            printf("	  %s ",partition->superbloc[indice]->nom);
             if(partition->superbloc[indice]->type == FICHIER)
             {
                 printf(" (file)\n");
@@ -356,6 +360,7 @@ int list_content_folder(DISK *partition,int id_dossier_pere)
     return 0;
 }
 
+//Fonction de départ qui renvoie une partition, créer un dossier root et initialise la valeur de l'id du dossier actuel à celui de root
 DISK Initialize_System(int* current_id)
 {
     DISK partition;
@@ -366,6 +371,7 @@ DISK Initialize_System(int* current_id)
     return partition;
 }
 
+//Fonction permettant de se déplacer dans l'un des dossier contenus dans le dossier actuel, ou bien son père
 int change_current_directory(DISK* partition,int *current_id,char* nom_destination)
 {
     int id_pere = *current_id;
@@ -380,6 +386,14 @@ int change_current_directory(DISK* partition,int *current_id,char* nom_destinati
     }
 
     INODE * parent= partition->superbloc[id_pere];
+    
+    //Si jamais le nom la chaine de caractère de destination est "..", on remonte dans le père
+    //Comme le root a été initialisé comme étant père de lui-même, si on va dans le père de root, on ne bouge pas
+    if(strcmp(nom_destination,"..")==0)
+    {
+		*current_id = parent->id_parent;
+	}
+		
 
     for(int i =0;i<CONTENU_MAX_REPERTOIRES;i++)
     {
@@ -400,5 +414,22 @@ int change_current_directory(DISK* partition,int *current_id,char* nom_destinati
     return ERR_FOLDER_NOT_FOUND;
 
 
+}
+
+int seek_id(DISK* partition,int current_id,char* nom)
+{
+	INODE * parent= partition->superbloc[current_id];
+	
+	for(int i =0;i<CONTENU_MAX_REPERTOIRES;i++)
+    {
+        if(parent->repertoire.fichiers_contenus[i].id_inode != -1)
+        {
+            if(strcmp(parent->repertoire.fichiers_contenus[i].nom,nom)==0 )
+            {
+                return parent->repertoire.fichiers_contenus[i].id_inode;
+			}
+        }
+    }
+    return ERR_TARGET_NOT_FOUND;
 }
 

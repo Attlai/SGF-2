@@ -8,7 +8,7 @@
 #include "fonctions_test.h"
 #include "macro.h"
 #include "error.h"
-#include "fonctions_node.h"
+#include "Fonctions_node.h"
 
 //Test de la fonction d'initialisation d'un DISK
 bool test_initialisation_DISK()

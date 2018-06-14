@@ -58,6 +58,7 @@ int Creer_INODE(DISK* partition,char *name,type_inode type)
             node->repertoire.fichiers_contenus[i].nom = NULL;
         }
     }
+    node->id = indice;
     node->id_parent = -1;
     node->nom = name;
     node->metadata.taille_fichier = 0;
@@ -368,6 +369,7 @@ DISK Initialize_System(int* current_id)
 {
     DISK partition;
     Initialiser_DISK(&partition);
+
     create_folder(&partition,"root",ROOT_PARENT_ID);
     *current_id = ROOT_INODE_ID;
 
